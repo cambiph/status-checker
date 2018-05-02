@@ -16,7 +16,7 @@ urls.forEach(function (url) {
         try {
             const browser = await puppeteer.launch({
                 headless: true,
-                dumpio: false
+                dumpio: true
             });
             const page = await browser.newPage();
 
