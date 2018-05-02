@@ -1,19 +1,33 @@
 const puppeteer = require('puppeteer');
 
-(async () => {
-    try {
-        const browser = await puppeteer.launch({
-            headless: true,
-            dumpio: true,
-            ignoreHTTPSErrors: true
-        });
-        const page = await browser.newPage();
+const urls = [
+    'https://www.delijn.be/nl/haltes/halte/104716/Antwerpen_Premetrostation_Diamant',
+    'https://www.delijn.be'
+]
 
-        await page.goto('https://www.delijn.be/nl/haltes/halte/104716/Antwerpen_Premetrostation_Diamant', {
-            waitUntil: 'networkidle0'
-        });
-        await browser.close();
-    } catch (error) {
-        console.log(error);
-    }
-})();
+urls.forEach(function (url) {
+    (async () => {
+        try {
+            const browser = await puppeteer.launch({
+                headless: true,
+                dumpio: true
+            });
+            const page = await browser.newPage();
+
+            page.on('response', response => {
+                if (response.status() != 200) {
+                    console.log('Failed!');
+                }
+            });
+
+            await page.goto(url, {
+                waitUntil: 'networkidle0',
+                timeout: 120000
+            });
+
+            await browser.close();
+        } catch (error) {
+            console.log(error);
+        }
+    })()
+});
