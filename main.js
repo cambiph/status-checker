@@ -1,5 +1,5 @@
-const puppeteer = require('puppeteer');
-const fs = require('fs');
+import { launch } from "puppeteer";
+import { appendFileSync } from "fs";
 
 const urls = [
     'https://www.delijn.be/nl/haltes/halte/104716/Antwerpen_Premetrostation_Diamant',
@@ -14,15 +14,15 @@ const urls = [
 urls.forEach(function (url) {
     (async () => {
         try {
-            const browser = await puppeteer.launch({
-                headless: true,
+            const browser = await launch({
                 dumpio: true
             });
+
             const page = await browser.newPage();
 
             page.on('response', response => {
-                if (response.status() != 200) {
-                    fs.appendFileSync('result.csv', new Date().toISOString() + ',' + response.url() + ',' + response.status() + '\n' , (err) => {
+                if(response.url().includes('delijn') && response.status() != 200) {
+                    appendFileSync('result.csv', new Date().toISOString() + ',' + response.url() + ',' + response.status() + '\n' , (err) => {
                         if (err) throw err;
                     });
                 }
