@@ -12,18 +12,15 @@ const urls = [
 ]
 
 async function launchBrowser() {
-    
-    let browser = await launch({dumpio: false, headless: false});
+    let browser = await launch({dumpio: true, headless: true});
     return browser;
-
 }
 
 async function setBrowser(url, browser) {
-    
     let page = await browser.newPage();
 
     page.on('response', response => {
-        if (response.url().match('(https:)\D{2}[a-z]*.(delijn)(\S+)') && response.status() != 200) {
+        if (!response.url().includes('google') && response.status() != 200) {
             appendFileSync('result.csv', new Date().toISOString() + ',' + response.url() + ',' + response.status() + '\n', (err) => {
                 if (err) throw err;
             });
@@ -34,7 +31,6 @@ async function setBrowser(url, browser) {
 }
 
 async function performGet(page, url) {
-
     await page.goto(url, {
         waitUntil: 'networkidle0',
         timeout: 120000
