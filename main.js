@@ -1,5 +1,5 @@
 import puppeteer from "puppeteer";
-import appendFileSync from "fs";
+import fs from "fs";
 import dateFormat from "dateformat";
 
 let urls = [
@@ -21,6 +21,8 @@ async function getTime() {
 }
 
 async function getRoutePlannerUrl() {
+    const date = await getDate();
+    const time = await getTime();
     return  'https://www.delijn.be/nl/routeplanner/resultaten.html?' +
             'from=Station+Antwerpen+Centraal+%5BB%5D' +
             '&startXCoordinaat=153657' +
@@ -28,9 +30,9 @@ async function getRoutePlannerUrl() {
             '&to=Station+Mechelen+%5BB%5D' + 
             '&finishXCoordinaat=158001' +
             '&finishYCoordinaat=189723' +
-            '&datum=' +  await getDate() +
+            '&datum=' +  date +
             '&departureChoice=1' +
-            '&tijd=' + await getTime() +
+            '&tijd=' + time +
             '&option-bus=on' +
             '&option-tram=on' +
             '&option-metro=on' +
@@ -47,8 +49,8 @@ async function launchBrowser() {
 }
 
 async function writeToFile(response) {
-    appendFileSync('result.csv', new Date().toISOString() + ',' + response.url() + ',' + response.status() + '\n', (err) => {
-        if (err) throw err;
+    fs.appendFile('result.csv', new Date().toISOString() + ',' + response.url() + ',' + response.status() + '\n', (err) => {
+        if (err) { console.log(err); }
     });
 }
 
@@ -56,8 +58,8 @@ async function setBrowser(url, browser) {
     let page = await browser.newPage();
 
     page.on('response', response => {
-        if (!response.url().includes('google') && response.status() != 200) {
-            writeToFile(response);
+        if (!response.url().includes('google') && !response.url().includes('doubleclick') && response.status() != 200) {    
+        writeToFile(response);
         };
     });
 
