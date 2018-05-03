@@ -18,7 +18,7 @@ async function launchBrowser() {
 
 }
 
-async function setBrowser(url, browsder) {
+async function setBrowser(url, browser) {
     
     let page = await browser.newPage();
 
