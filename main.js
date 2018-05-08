@@ -1,4 +1,5 @@
-import { writeToFile, addUrlToArray, testUrl, urls } from "./lib";
+import { writeToFile, testUrl } from "./lib/functions";
+import { urls, addUrlToArray } from "./lib/url"
 
 async function run() {
     await addUrlToArray();
