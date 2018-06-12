@@ -1,17 +1,17 @@
-import { writeToFile, testUrl } from "./lib/functions";
-import { urls, addUrlToArray } from "./lib/url"
+import { writeToFile, testUrl } from './lib/functions';
+import { urls, addUrlToArray } from './lib/url';
 
 async function run() {
-    await addUrlToArray();
+  await addUrlToArray();
 
-    urls.forEach(async (url) => {
-        try {
-            console.log('Testing ' + url)
-            await testUrl(url);
-        } catch (err) {
-            console.log(err);
-        }
-    });
+  urls.forEach(async url => {
+    try {
+      console.log('Testing ' + url);
+      await testUrl(url);
+    } catch (err) {
+      console.log(err);
+    }
+  });
 }
 
 run();
